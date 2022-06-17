@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 
 const Home: NextPage = () => {
-  const title: string = 'sfs';
+  const title: string = 'CryptoNix';
   console.log(title);
 
   return (
