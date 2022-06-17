@@ -6,7 +6,7 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <h1>CryptoNix</h1>
+      <h1 className='text-3xl font-bold underline'>CryptoNix</h1>
     </div>
   );
 };

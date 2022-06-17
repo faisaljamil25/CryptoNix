@@ -65,5 +65,6 @@ module.exports = {
         aspects: ['noHref', 'invalidHref', 'preferButton'],
       },
     ],
+    'jsx-quotes': ['error', 'prefer-single'],
   },
 };
