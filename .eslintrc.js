@@ -74,5 +74,10 @@ module.exports = {
       },
     ],
     'jsx-quotes': ['error', 'prefer-single'],
+    'operator-linebreak': [
+      'error',
+      'after',
+      { overrides: { '?': 'before', ':': 'before' } },
+    ],
   },
 };
