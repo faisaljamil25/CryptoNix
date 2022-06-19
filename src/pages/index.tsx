@@ -1,5 +1,7 @@
 import type { NextPage } from 'next';
-import { Banner } from '../components';
+
+import { Banner, CreatorCard } from '../components';
+import images from '../../assets';
 
 const Home: NextPage = () => {
   const title: string = 'CryptoNix';
@@ -17,6 +19,16 @@ const Home: NextPage = () => {
           childStyles='md:text-4xl sm:text-2xl xs:text-xl text-left'
           parentStyle='justify-start mb-7 h-72 sm:h-60 p-12 xs:p-4 xs:h-44 rounded-3xl'
         />
+
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <CreatorCard
+            key={`creator-${i}`}
+            rank={i}
+            creatorImage={images[`creator${i}` as keyof typeof images]}
+            creatorName={`John Doe`}
+            creatorEths={10}
+          />
+        ))}
       </div>
     </div>
   );
