@@ -74,6 +74,7 @@ module.exports = {
       },
     ],
     'jsx-quotes': ['error', 'prefer-single'],
+    'react/jsx-wrap-multilines': ['error', 0],
     'operator-linebreak': [
       'error',
       'after',
