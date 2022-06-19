@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-import { Banner, CreatorCard } from '../components';
+import { Banner, CreatorCard, NFTCard } from '../components';
 import images from '../../assets';
 
 const Home: NextPage = () => {
@@ -27,6 +27,14 @@ const Home: NextPage = () => {
             creatorImage={images[`creator${i}` as keyof typeof images]}
             creatorName={`John Doe`}
             creatorEths={10}
+          />
+        ))}
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <NFTCard
+            key={i}
+            name='John Doe'
+            price={1000}
+            img={images[`nft${i}` as keyof typeof images]}
           />
         ))}
       </div>
