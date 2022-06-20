@@ -2,7 +2,7 @@ interface InputProps {
   inputType: string;
   title: string;
   placeholder: string;
-  handleClick: () => {};
+  handleClick: (e: any) => void;
 }
 
 const Input: React.FC<InputProps> = ({
