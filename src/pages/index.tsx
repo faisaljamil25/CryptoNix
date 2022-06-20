@@ -25,6 +25,28 @@ const Home: NextPage = () => {
     }
   };
 
+  // check if scrollRef container is overfilling its parentRef container
+  const isScrollable = () => {
+    const { current } = scrollRef;
+    const { current: parent } = parentRef;
+
+    if (!current || !parent) return;
+
+    if (current?.scrollWidth >= parent?.offsetWidth)
+      return setHideButtons(false);
+    return setHideButtons(true);
+  };
+
+  // if window is resized
+  useEffect(() => {
+    isScrollable();
+    window.addEventListener('resize', isScrollable);
+
+    return () => {
+      window.removeEventListener('resize', isScrollable);
+    };
+  }, []);
+
   return (
     <div className='flex justify-center sm:px-4 p-12'>
       <div className='w-full minmd:w-4/5'>
@@ -88,15 +110,6 @@ const Home: NextPage = () => {
             </div>
           </div>
         </div>
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <CreatorCard
-            key={`creator-${i}`}
-            rank={i}
-            creatorImage={images[`creator${i}` as keyof typeof images]}
-            creatorName={`John Doe`}
-            creatorEths={10}
-          />
-        ))}
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <NFTCard
             key={i}
