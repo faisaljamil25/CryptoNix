@@ -6,8 +6,6 @@ import { Footer, Navbar } from '../components';
 import '../../styles/globals.css';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const title: string = 'CryptoNix';
-  console.log(title);
   return (
     <ThemeProvider attribute='class'>
       <div className='dark:bg-nft-dark bg-white min-h-screen'>

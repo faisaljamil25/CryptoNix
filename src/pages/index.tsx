@@ -4,9 +4,6 @@ import { Banner, CreatorCard, NFTCard } from '../components';
 import images from '../../assets';
 
 const Home: NextPage = () => {
-  const title: string = 'CryptoNix';
-  console.log(title);
-
   return (
     <div className='flex justify-center sm:px-4 p-12'>
       <div className='w-full minmd:w-4/5'>
