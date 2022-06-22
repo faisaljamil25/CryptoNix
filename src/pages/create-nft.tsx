@@ -1,12 +1,14 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
+import { useTheme } from 'next-themes';
 import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
+import { useRouter } from 'next/router';
 
 import { Button, Input } from '../components';
 import images from '../../assets';
-import { useTheme } from 'next-themes';
+import { NFTContext } from '../../context/NFTContext';
 
 // @ts-ignore
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
@@ -24,6 +26,8 @@ const CreateItem: NextPage = () => {
     description: '',
   });
   const [fileUrl, setFileUrl] = useState<string>('');
+  const router = useRouter();
+  const { createSale } = useContext(NFTContext);
 
   const uploadToInfura = async (file: File) => {
     try {
@@ -63,6 +67,21 @@ const CreateItem: NextPage = () => {
        ${isDragReject ? ' border-file-reject ' : ''}`,
     [isDragActive, isDragReject, isDragAccept]
   );
+
+  const createNFT = async () => {
+    const { name, description, price } = formInput;
+    if (!name || !description || !price || !fileUrl) return;
+    const data = JSON.stringify({ name, description, image: fileUrl });
+    try {
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+
+      await createSale(url, formInput.price);
+      router.push('/');
+    } catch (error) {
+      console.log('Error uploading file: ', error);
+    }
+  };
 
   return (
     <div className='flex justify-center sm:px-4 p-12'>
@@ -143,7 +162,7 @@ const CreateItem: NextPage = () => {
             btnName='Create Item'
             btnType='primary'
             classStyles='rounded-xl'
-            handleClick={() => {}}
+            handleClick={createNFT}
           />
         </div>
       </div>
