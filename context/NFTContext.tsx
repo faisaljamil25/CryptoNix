@@ -23,6 +23,7 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const nftCurrency = 'ETH';
   const [currentAccount, setCurrentAccount] = useState<string>('');
+  const [isLoadingNFT, setIsLoadingNFT] = useState<boolean>(false);
 
   const checkIfWalletIsConnect = async () => {
     if (!window.ethereum) return alert('Please install MetaMask.');
@@ -66,17 +67,72 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
     const transaction = await contract.createToken(url, price, {
       value: listingPrice.toString(),
     });
-
+    setIsLoadingNFT(true);
     await transaction.wait();
   };
 
   const fetchNFTs = async () => {
+    setIsLoadingNFT(false);
     const provider = new ethers.providers.JsonRpcProvider();
     const contract = fetchContract(provider);
 
     const data = await contract.fetchMarketItems();
     console.log('data');
     console.log(data);
+
+    const items: nftType[] = await Promise.all(
+      data.map(
+        async ({
+          tokenId,
+          seller,
+          owner,
+          price: unformattedPrice,
+        }: {
+          tokenId: BigNumber;
+          seller: string;
+          owner: string;
+          price: BigNumber;
+        }) => {
+          const tokenURI = await contract.tokenURI(tokenId);
+          const {
+            data: { image, name, description },
+          } = await axios.get(tokenURI);
+          const price = ethers.utils.formatUnits(
+            unformattedPrice.toString(),
+            'ether'
+          );
+
+          return {
+            price,
+            tokenId: tokenId.toNumber(),
+            id: tokenId.toNumber(),
+            seller,
+            owner,
+            image,
+            name,
+            description,
+            tokenURI,
+          };
+        }
+      )
+    );
+
+    return items;
+  };
+
+  const fetchMyNFTsOrCreatedNFTs = async (type: string) => {
+    setIsLoadingNFT(false);
+
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const contract = fetchContract(signer);
+    const data =
+      type === 'fetchItemsListed'
+        ? await contract.fetchItemsListed()
+        : await contract.fetchMyNFTs();
 
     const items: nftType[] = await Promise.all(
       data.map(
@@ -126,6 +182,8 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
         currentAccount,
         createSale,
         fetchNFTs,
+        fetchMyNFTsOrCreatedNFTs,
+        isLoadingNFT,
       }}
     >
       {children}
