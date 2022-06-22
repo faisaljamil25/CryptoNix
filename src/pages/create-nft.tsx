@@ -2,11 +2,14 @@ import { useCallback, useMemo, useState } from 'react';
 import type { NextPage } from 'next';
 import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
+import { create as ipfsHttpClient } from 'ipfs-http-client';
 
 import { Button, Input } from '../components';
 import images from '../../assets';
 import { useTheme } from 'next-themes';
 
+// @ts-ignore
+const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 interface FormInputType {
   price: string;
   name: string;
@@ -20,11 +23,24 @@ const CreateItem: NextPage = () => {
     name: '',
     description: '',
   });
+  const [fileUrl, setFileUrl] = useState<string>('');
 
-  const onDrop = () => {
-    // upload file to the ipfs
-    // to be implemented
+  const uploadToInfura = async (file: File) => {
+    try {
+      const added = await client.add({ content: file });
+
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+
+      setFileUrl(url);
+      // console.log(url);
+    } catch (error) {
+      console.log('Error uploading file: ', error);
+    }
   };
+
+  const onDrop = useCallback(async (acceptedFile: File[]) => {
+    await uploadToInfura(acceptedFile[0]);
+  }, []);
 
   const {
     getRootProps,
@@ -85,6 +101,13 @@ const CreateItem: NextPage = () => {
                 </p>
               </div>
             </div>
+            {fileUrl && (
+              <aside>
+                <div>
+                  <img src={fileUrl} alt='Asset_file' />
+                </div>
+              </aside>
+            )}
           </div>
         </div>
 
