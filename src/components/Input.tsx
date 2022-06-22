@@ -1,3 +1,6 @@
+import { useContext } from 'react';
+import { NFTContext } from '../../context/NFTContext';
+
 interface InputProps {
   inputType: string;
   title: string;
@@ -11,7 +14,7 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   handleClick,
 }) => {
-  const nftCurrency = 'ETH';
+  const { nftCurrency } = useContext(NFTContext);
 
   return (
     <div className='mt-10 w-full'>

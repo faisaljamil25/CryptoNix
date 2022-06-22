@@ -1,6 +1,8 @@
 import Image, { StaticImageData } from 'next/image';
+import { useContext } from 'react';
 
 import images from '../../assets';
+import { NFTContext } from '../../context/NFTContext';
 
 interface CardProps {
   rank: number;
@@ -15,7 +17,7 @@ const CreatorCard: React.FC<CardProps> = ({
   creatorName,
   creatorEths,
 }) => {
-  const nftCurrency = 'ETH';
+  const { nftCurrency } = useContext(NFTContext);
 
   return (
     <div className='min-w-190 minlg:min-w-240 dark:bg-nft-black-3 bg-white border dark:border-nft-black-3 border-nft-gray-1 rounded-3xl flex flex-col p-4 m-4'>

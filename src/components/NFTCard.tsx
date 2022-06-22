@@ -1,5 +1,7 @@
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
+import { useContext } from 'react';
+import { NFTContext } from '../../context/NFTContext';
 
 interface NFTCardProps {
   name: string;
@@ -8,7 +10,7 @@ interface NFTCardProps {
 }
 
 const NFTCard: React.FC<NFTCardProps> = ({ name, price, img }) => {
-  const nftCurrency = 'ETH';
+  const { nftCurrency } = useContext(NFTContext);
 
   return (
     <Link href={{ pathname: '/nft-details', query: `nft-${name}` }}>

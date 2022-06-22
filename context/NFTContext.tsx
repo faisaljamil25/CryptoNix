@@ -15,7 +15,7 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const nftCurrency = 'ETH';
-  const [currentAccount, setCurrentAccount] = useState('');
+  const [currentAccount, setCurrentAccount] = useState<string>('');
 
   const checkIfWalletIsConnect = async () => {
     if (!window.ethereum) return alert('Please install MetaMask.');

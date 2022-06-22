@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import images from '../../assets';
 import Button from './Button';
+import { NFTContext } from '../../context/NFTContext';
 
 interface MenuItemsProps {
   isMobile: boolean;
@@ -67,9 +68,9 @@ const MenuItems: React.FC<MenuItemsProps> = ({
 };
 
 const ButtonGroup: React.FC<ButtonGroupProps> = ({ setActive, router }) => {
-  const hasConnected = false;
+  const { connectWallet, currentAccount } = useContext(NFTContext);
 
-  return hasConnected ? (
+  return currentAccount ? (
     <div className='flexCenter'>
       <Button
         btnName='Create'
@@ -86,7 +87,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ setActive, router }) => {
       btnName='Connect'
       btnType='outline'
       classStyles='mx-2 rounded-lg'
-      handleClick={() => {}}
+      handleClick={connectWallet}
     />
   );
 };
