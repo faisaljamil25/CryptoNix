@@ -1,31 +1,42 @@
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { useContext } from 'react';
-import { NFTContext } from '../../context/NFTContext';
 
+import { NFTContext } from '../../context/NFTContext';
+import { nftType } from '../../context/types';
+import images from '../../assets';
+import { shortenAddress } from '../utils/shortenAddress';
 interface NFTCardProps {
-  name: string;
-  price: number;
-  img: StaticImageData;
+  nft: nftType;
 }
 
-const NFTCard: React.FC<NFTCardProps> = ({ name, price, img }) => {
+const NFTCard: React.FC<NFTCardProps> = ({ nft }) => {
   const { nftCurrency } = useContext(NFTContext);
 
   return (
-    <Link href={{ pathname: '/nft-details', query: `nft-${name}` }}>
+    <Link href={{ pathname: '/nft-details', query: nft.id.toString() }}>
       <div className='flex-1 min-w-215 max-w-max xs:max-w-none sm:w-full sm:min-w-155 minmd:min-w-256 minlg:min-w-327 dark:bg-nft-black-3 bg-white rounded-2xl p-4 m-4 minlg:m-8 sm:my-2 sm:mx-2 cursor-pointer shadow-md'>
         <div className='relative w-full h-52 sm:h-36 xs:h-56 minmd:h-60 minlg:h-300 rounded-2xl overflow-hidden'>
-          <Image src={img} layout='fill' objectFit='cover' alt='nft01' />
+          <Image
+            src={nft.image || images[`nft${nft.id}` as keyof typeof images]}
+            layout='fill'
+            objectFit='cover'
+            alt='nft01'
+          />
         </div>
         <div className='mt-3 flex flex-col'>
           <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-sm minlg:text-xl'>
-            {name}
+            {nft.name}
           </p>
           <div className='flexBetween mt-1 minlg:mt-3 flex-row xs:flex-col xs:items-start xs:mt-3'>
             <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-xs minlg:text-lg'>
-              {price}
+              {nft.price}
               <span className='font-normal'> {nftCurrency}</span>
+            </p>
+            <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-xs minlg:text-lg'>
+              {shortenAddress(
+                nft.seller.length > 10 ? shortenAddress(nft.seller) : nft.seller
+              )}
             </p>
           </div>
           <div className='mt-1 minlg:mt-3 flexBetween flex-row' />

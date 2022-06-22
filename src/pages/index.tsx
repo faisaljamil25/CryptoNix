@@ -1,16 +1,26 @@
 import type { NextPage } from 'next';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 
 import { Banner, CreatorCard, NFTCard } from '../components';
 import images from '../../assets';
+import { NFTContext } from '../../context/NFTContext';
+import { nftType } from '../../context/types';
 
 const Home: NextPage = () => {
   const { theme } = useTheme();
   const [hideButtons, setHideButtons] = useState<boolean>(false);
   const scrollRef = useRef<HTMLElement>(null);
   const parentRef = useRef<HTMLElement>(null);
+  const [nfts, setNfts] = useState<nftType[]>([]);
+  const { fetchNFTs } = useContext(NFTContext);
+
+  useEffect(() => {
+    fetchNFTs().then((items) => {
+      setNfts(items);
+    });
+  }, []);
 
   const handleScroll = (direction: string) => {
     const { current } = scrollRef;
@@ -117,14 +127,17 @@ const Home: NextPage = () => {
             </h1>
           </div>
           <div className='mt-3 w-full flex flex-wrap justify-start md:justify-center'>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {nfts.map((nft) => (
+              <NFTCard key={nft.tokenId} nft={nft} />
+            ))}
+            {/* {[1, 2, 3, 4, 5, 6].map((i) => (
               <NFTCard
                 key={i}
                 name='John Doe'
                 price={1000}
                 img={images[`nft${i}` as keyof typeof images]}
               />
-            ))}
+            ))} */}
           </div>
         </div>
       </div>

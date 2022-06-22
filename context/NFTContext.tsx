@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Web3Modal from 'web3modal';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import axios from 'axios';
-import { MarketAddress, MarketAddressABI } from './constants';
 
-const fetchContract = (signerOrProvider: ethers.providers.JsonRpcSigner) =>
-  new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
+import {
+  MarketAddress,
+  MarketAddressABI,
+  nftContextDefaultValues,
+} from './constants';
+import { nftType } from './types';
 
-const defaultValues = {
-  nftCurrency: 'ETH',
-  connectWallet: () => {},
-  currentAccount: '',
-  createSale: (url: string, formInputPrice: string) => {},
-};
+const fetchContract = (
+  signerOrProvider:
+    | ethers.providers.JsonRpcSigner
+    | ethers.providers.JsonRpcProvider
+) => new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
-export const NFTContext = React.createContext(defaultValues);
+export const NFTContext = React.createContext(nftContextDefaultValues);
 
 export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -68,6 +70,54 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
     await transaction.wait();
   };
 
+  const fetchNFTs = async () => {
+    const provider = new ethers.providers.JsonRpcProvider();
+    const contract = fetchContract(provider);
+
+    const data = await contract.fetchMarketItems();
+    console.log('data');
+    console.log(data);
+
+    const items: nftType[] = await Promise.all(
+      data.map(
+        async ({
+          tokenId,
+          seller,
+          owner,
+          price: unformattedPrice,
+        }: {
+          tokenId: BigNumber;
+          seller: string;
+          owner: string;
+          price: BigNumber;
+        }) => {
+          const tokenURI = await contract.tokenURI(tokenId);
+          const {
+            data: { image, name, description },
+          } = await axios.get(tokenURI);
+          const price = ethers.utils.formatUnits(
+            unformattedPrice.toString(),
+            'ether'
+          );
+
+          return {
+            price,
+            tokenId: tokenId.toNumber(),
+            id: tokenId.toNumber(),
+            seller,
+            owner,
+            image,
+            name,
+            description,
+            tokenURI,
+          };
+        }
+      )
+    );
+
+    return items;
+  };
+
   return (
     <NFTContext.Provider
       value={{
@@ -75,6 +125,7 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
         connectWallet,
         currentAccount,
         createSale,
+        fetchNFTs,
       }}
     >
       {children}
