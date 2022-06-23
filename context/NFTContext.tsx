@@ -54,7 +54,12 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
     checkIfWalletIsConnect();
   }, []);
 
-  const createSale = async (url: string, formInputPrice: string) => {
+  const createSale = async (
+    url: string,
+    formInputPrice: string,
+    isReselling?: boolean,
+    id?: string
+  ) => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
@@ -64,9 +69,14 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
     const contract = fetchContract(signer);
     const listingPrice = await contract.getListingPrice();
 
-    const transaction = await contract.createToken(url, price, {
-      value: listingPrice.toString(),
-    });
+    const transaction = !isReselling
+      ? await contract.createToken(url, price, {
+          value: listingPrice.toString(),
+        })
+      : await contract.resellToken(id, price, {
+          value: listingPrice.toString(),
+        });
+
     setIsLoadingNFT(true);
     await transaction.wait();
   };

@@ -22,7 +22,12 @@ export const nftContextDefaultValues = {
   nftCurrency: 'ETH',
   connectWallet: async () => {},
   currentAccount: '',
-  createSale: async (url: string, formInputPrice: string) => {},
+  createSale: async (
+    url: string,
+    formInputPrice: string,
+    isReselling?: boolean,
+    id?: string
+  ) => {},
   fetchNFTs: async () => initialNFTvalues,
   fetchMyNFTsOrCreatedNFTs: async (type: string) => initialNFTvalues,
   isLoadingNFT: false,
