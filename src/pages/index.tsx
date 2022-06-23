@@ -7,6 +7,8 @@ import { Banner, CreatorCard, NFTCard } from '../components';
 import images from '../../assets';
 import { NFTContext } from '../../context/NFTContext';
 import { nftType } from '../../context/types';
+import { getCreators } from '../utils/getTopCreators';
+import { shortenAddress } from '../utils/shortenAddress';
 
 const Home: NextPage = () => {
   const { theme } = useTheme();
@@ -57,6 +59,8 @@ const Home: NextPage = () => {
     };
   }, []);
 
+  const creators = getCreators(nfts);
+
   return (
     <div className='flex justify-center sm:px-4 p-12'>
       <div className='w-full minmd:w-4/5'>
@@ -80,7 +84,18 @@ const Home: NextPage = () => {
               // @ts-ignore: ref type
               ref={scrollRef}
             >
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+              {creators.map((creator, i) => (
+                <CreatorCard
+                  key={creator.seller}
+                  rank={i + 1}
+                  creatorImage={
+                    images[`creator${i + 1}` as keyof typeof images]
+                  }
+                  creatorName={shortenAddress(creator.seller)}
+                  creatorEths={creator.sumall}
+                />
+              ))}
+              {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
                 <CreatorCard
                   key={`creator-${i}`}
                   rank={i}
@@ -88,7 +103,7 @@ const Home: NextPage = () => {
                   creatorName={`John Doe`}
                   creatorEths={10 - i * 0.5}
                 />
-              ))}
+              ))} */}
               {!hideButtons && (
                 <>
                   <div
