@@ -143,6 +143,17 @@ const AssetDetails = () => {
             <p className='font-poppins dark:text-white text-nft-black-1 font-normal text-base border border-gray p-2'>
               You cannot buy your own NFT
             </p>
+          ) : currentAccount === nft.owner.toLowerCase() ? (
+            <Button
+              btnName='List on Marketplace'
+              btnType='primary'
+              classStyles='mr-5 sm:mr-0 sm:mb-5 rounded-xl'
+              handleClick={() =>
+                router.push(
+                  `/resell-nft?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`
+                )
+              }
+            />
           ) : (
             <Button
               btnName={`Buy for ${nft.price} ${nftCurrency}`}
@@ -153,6 +164,7 @@ const AssetDetails = () => {
           )}
         </div>
       </div>
+
       {paymentModal && (
         <Modal
           header='Check Out'
