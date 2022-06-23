@@ -174,6 +174,26 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
     return items;
   };
 
+  const buyNft = async (nft: nftType) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      MarketAddress,
+      MarketAddressABI,
+      signer
+    );
+
+    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+    const transaction = await contract.createMarketSale(nft.tokenId, {
+      value: price,
+    });
+    setIsLoadingNFT(true);
+    await transaction.wait();
+    setIsLoadingNFT(false);
+  };
+
   return (
     <NFTContext.Provider
       value={{
@@ -184,6 +204,7 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchNFTs,
         fetchMyNFTsOrCreatedNFTs,
         isLoadingNFT,
+        buyNft,
       }}
     >
       {children}
