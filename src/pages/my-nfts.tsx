@@ -61,7 +61,7 @@ const MyNFTs: NextPage = () => {
         <div className='sm:px-4 p-12 w-full minmd:w-4/5 flexCenter flex-col'>
           <div className='mt-3 w-full flex flex-wrap'>
             {nfts.map((nft) => (
-              <NFTCard key={`nft-${nft.tokenId}`} nft={nft} />
+              <NFTCard key={`nft-${nft.tokenId}`} nft={nft} onProfilePage />
             ))}
           </div>
         </div>
