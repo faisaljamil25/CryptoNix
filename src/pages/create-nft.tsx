@@ -105,7 +105,7 @@ const CreateItem: NextPage = () => {
               <input {...getInputProps()} />
               <div className='flexCenter flex-col text-center'>
                 <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-xl'>
-                  JPG, PNG, GIF, SVG, WEBM, MP3, MP4. Max 2mb.
+                  JPG, PNG, GIF, SVG, WEBM, MP3, MP4. Max 2MB.
                 </p>
 
                 <div className='my-12 w-full flex justify-center'>
