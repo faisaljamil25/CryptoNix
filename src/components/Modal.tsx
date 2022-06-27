@@ -7,7 +7,7 @@ import images from '../../assets';
 interface ModalProps {
   header: string;
   body: JSX.Element;
-  footer: JSX.Element;
+  footer?: JSX.Element;
   handleClose: () => void;
 }
 

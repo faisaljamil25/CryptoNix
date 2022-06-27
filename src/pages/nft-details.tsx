@@ -72,6 +72,15 @@ const AssetDetails = () => {
   const router = useRouter();
 
   useEffect(() => {
+    // disable body scroll when navbar is open
+    if (paymentModal || successModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'visible';
+    }
+  }, [paymentModal, successModal]);
+
+  useEffect(() => {
     if (!router.isReady) return;
     // @ts-ignore
     setNft(router.query);
@@ -186,6 +195,20 @@ const AssetDetails = () => {
             </div>
           }
           handleClose={() => setPaymentModal(false)}
+        />
+      )}
+
+      {isLoadingNFT && (
+        <Modal
+          header='Buying NFT...'
+          body={
+            <div className='flexCenter flex-col text-center'>
+              <div className='relative w-52 h-52'>
+                <Loader />
+              </div>
+            </div>
+          }
+          handleClose={() => setSuccessModal(false)}
         />
       )}
 
