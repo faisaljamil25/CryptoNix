@@ -87,8 +87,8 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
     const contract = fetchContract(provider);
 
     const data = await contract.fetchMarketItems();
-    console.log('data');
-    console.log(data);
+
+    // console.log(data);
 
     const items: nftType[] = await Promise.all(
       data.map(
