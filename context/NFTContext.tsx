@@ -21,7 +21,7 @@ export const NFTContext = React.createContext(nftContextDefaultValues);
 export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const nftCurrency = 'ETH';
+  const nftCurrency = 'MATIC';
   const [currentAccount, setCurrentAccount] = useState<string>('');
   const [isLoadingNFT, setIsLoadingNFT] = useState<boolean>(false);
 
@@ -36,7 +36,7 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log('No accounts found');
     }
 
-    console.log(accounts);
+    // console.log(accounts);
   };
 
   const connectWallet = async () => {
@@ -83,7 +83,9 @@ export const NFTProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchNFTs = async () => {
     setIsLoadingNFT(false);
-    const provider = new ethers.providers.JsonRpcProvider();
+    const provider = new ethers.providers.JsonRpcProvider(
+      'https://rpc-mumbai.maticvigil.com'
+    );
     const contract = fetchContract(provider);
 
     const data = await contract.fetchMarketItems();
